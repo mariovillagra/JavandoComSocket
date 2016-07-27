@@ -7,6 +7,8 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.net.SocketException;
 
+import src.main.Billetera;
+
 public class ServerHandler implements Runnable{
 	private final Socket socket;
 	private InputStreamReader in;
@@ -23,7 +25,7 @@ public class ServerHandler implements Runnable{
 	}
 
 	public void run() {
-		System.out.println("Marmot from: " + socket.getInetAddress().getHostAddress());
+		System.out.println("Transaction from: " + socket.getInetAddress().getHostAddress());
 		String received = "";
 
 		BufferedReader br = new BufferedReader(in);
@@ -41,26 +43,23 @@ public class ServerHandler implements Runnable{
 				received = br.readLine();
 
 				if (received != null)	{
-					
-					switch (received) {
-					case "disconnected":
+					if (received.equalsIgnoreCase("disconnected")) {
 						keeplistening = Boolean.FALSE;
-						
 						pw.println("disconnected");
-						System.out.println("Server: Disconnecting");
-						
+						System.out.println("Server: Disconnecting");					
 						br.close();
 						in.close();
 						pw.close();		
-						
-						break;
-
-					default:
-						System.out.println("Received: " + received);
-						pw.println("Server pong for message: " + received);
-						
-						break;
 					}
+					String[] tokens = received.split("|");
+					String nro_telefono = tokens[0];
+					String Monto = tokens[1];
+					String Pin = tokens[2];
+					
+					// Apply to Billetera
+					Billetera b = new Billetera();
+					// invoke methods
+					// Repond to client
 				}
 			}
 
